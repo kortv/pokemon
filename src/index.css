@@ -20,8 +20,13 @@
 
 .filter__unit {
   margin: 10px;
+  flex: 1 1 auto;
 }
 
 .pagination__input {
   margin-left: 5px;
+}
+
+.pagination-filter {
+  float: right
 }

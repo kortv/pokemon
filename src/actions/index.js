@@ -20,9 +20,7 @@ import {
 //   }
 // }
 
-export function setFilteredData (pokemons) {
-  console.log(pokemons)
-  const { searchText, dataList } = pokemons
+export function setFilteredData ({ searchText, dataList }) {
   const reg = new RegExp(searchText, 'gi')
   dataList.filter(record => !!record.name.match(reg))
 
@@ -118,9 +116,10 @@ export function fetchPokemon (data) {
   }
 }
 
-function typePending () {
+function typePending (payload) {
   return {
-    type: TYPE_PENDING
+    type: TYPE_PENDING,
+    payload
   }
 }
 
@@ -150,7 +149,7 @@ function typeRejected (payload) {
 export function fetchType (url) {
   console.log(url)
   return (dispatch) => {
-    dispatch(typePending())
+    dispatch(typePending(url))
     return (
       fetch(url)
         .then((response) => response.json())

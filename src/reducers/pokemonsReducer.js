@@ -47,7 +47,8 @@ const pokemonsReducer = (state = initialState, action) => {
       return {
         ...state,
         filteredList: action.payload,
-        isFilter: !!action.payload
+        isFilter: !!action.payload,
+        typeValue: undefined
       }
 
     case POKEMONS_PENDING:
@@ -78,13 +79,17 @@ const pokemonsReducer = (state = initialState, action) => {
       return {
         ...state,
         filteredList: state.typeDetails[action.payload].map(mergeData),
+        typeValue: action.payload,
+        searchText: '',
         isFilter: true
       }
 
     case TYPE_PENDING:
       return {
         ...state,
-        isFetching: true
+        isFetching: true,
+        searchText: '',
+        typeValue: action.payload
       }
 
     case TYPE_FULFILLED:

@@ -2,13 +2,22 @@ import React, { PureComponent } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import get from 'lodash.get'
-import { Table, Input, Icon, Select, InputNumber } from 'antd'
+import { Table } from 'antd'
 import { getIdFromUrl } from './utils'
 import * as actionCreators from './actions'
+import {images} from './constants'
+import Filters from './Filters'
 import './index.css'
 
-const { Option } = Select
+const isImage = (id) => id && new RegExp(`,${id},`).test(images)
 const columns = [
+  {
+    title: 'Avatar',
+    dataIndex: 'id',
+    render: (id) => (<img src={`img/${isImage(id) ? id : 0}.png`} alt=""/> : null),
+    key: 'avatar',
+    width: '10%'
+  },
   {
     title: 'Name',
     dataIndex: 'name',
@@ -62,22 +71,29 @@ class MainTable extends PureComponent {
     this.props.actions.fetchPokemons()
   }
 
-  _getDetails = data => {
-    if (!this.props.isFetching && data.length) {
+  _renderFilters = (data) => {
+    const {props} = this
+    if (!props.isFetching && data.length) {
       const filtred = data.filter(obj => {
         const id = getIdFromUrl(obj.url)
-        return id && !this.props.details[id]
+        return id && !props.details[id]
       })
-      console.log(filtred)
-      filtred.length && this.props.actions.fetchPokemon(filtred)
+      filtred.length && props.actions.fetchPokemon(filtred)
     }
+    return <Filters
+      {...this.state}
+      {...props}
+      onSearch={this._onSearch}
+      onSelect={this._onSelect}
+      onChange={this._onChange}
+    />
   };
 
   _onSearch = () => {
     this.props.actions.setFilteredData(this.props)
   };
 
-  _onSelect = url => {
+  _onSelect = (url) => {
     const id = getIdFromUrl(url)
     if (id) {
       !this.props.typeDetails[id]
@@ -96,53 +112,12 @@ class MainTable extends PureComponent {
     const { props } = this
     return (
       <div className='main'>
-        <div className='filter'>
-          <div className='filter__unit'>
-            <Input
-              placeholder='Search pokemon by name'
-              value={props.searchText}
-              onChange={this.props.actions.setFilter}
-              onPressEnter={this._onSearch}
-              addonAfter={<Icon type='search' onClick={this._onSearch} className='search-icon' />}
-            />
-          </div>
-          <div className='filter__unit'>
-            <Select
-              showSearch
-              style={{ width: 200 }}
-              placeholder='Select to filtered by type'
-              optionFilterProp='children'
-              filterOption={(input, option) =>
-                option.props.children
-                  .toLowerCase()
-                  .indexOf(input.toLowerCase()) >= 0}
-              onSelect={this._onSelect}
-            >
-              {props.typeList.map(obj => (
-                <Option key={obj.name} value={obj.url}>{obj.name}</Option>
-              ))}
-            </Select>
-          </div>
-          <div className='filter__unit'>
-            <span className='pagination-filter'>
-              Pagination size:
-              <InputNumber
-                className='pagination__input'
-                min={1}
-                max={20}
-                value={this.state.pageSize}
-                onChange={this._onChange}
-              />
-            </span>
-          </div>
-        </div>
         <Table
-          bordered
           className='table'
           columns={columns}
           dataSource={props.isFilter ? props.filteredList : props.dataList}
           locale={locale}
-          footer={this._getDetails}
+          title={this._renderFilters}
           loading={props.isFetching}
           pagination={this.state}
         />
