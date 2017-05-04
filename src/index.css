@@ -30,3 +30,7 @@
 .pagination-filter {
   float: right
 }
+
+.ant-table-tbody > tr > td {
+  padding: 0 8px;
+}
