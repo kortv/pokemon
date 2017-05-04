@@ -29,7 +29,6 @@ const initialState = {
 
 const pokemonsReducer = (state = initialState, action) => {
   const mergeData = (obj) => {
-    console.log(obj)
     const {pokemon = {}} = obj
     return obj.id ? obj : {
       ...pokemon,

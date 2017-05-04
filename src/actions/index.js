@@ -80,7 +80,6 @@ function pokemonPending () {
 }
 
 function pokemonFulfilled (data) {
-  console.log(data)
   return {
     type: POKEMON_FULFILLED,
     payload: data.reduce((obj, val) => ({
@@ -103,7 +102,6 @@ export function fetchPokemon (data) {
     dispatch(pokemonPending())
     return (
       Promise.all(data.map(({url}) => {
-        console.log(url)
         return fetch(url)
         .then((response) => response.json())
       }))
@@ -131,7 +129,6 @@ export function setType (payload) {
 }
 
 function typeFulfilled ({id, pokemon}) {
-  console.log(id, pokemon)
   return {
     type: TYPE_FULFILLED,
     id,
@@ -147,7 +144,6 @@ function typeRejected (payload) {
 }
 
 export function fetchType (url) {
-  console.log(url)
   return (dispatch) => {
     dispatch(typePending(url))
     return (
