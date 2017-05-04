@@ -1,0 +1,27 @@
+@import '~antd/dist/antd.css';
+
+.main {
+  margin: 20px;
+}
+
+.table {
+  margin-top: 20px;
+}
+
+.search-icon {
+  cursor: pointer;
+}
+
+.filter {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.filter__unit {
+  margin: 10px;
+}
+
+.pagination__input {
+  margin-left: 5px;
+}
